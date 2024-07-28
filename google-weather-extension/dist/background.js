@@ -1,0 +1,1 @@
+(()=>{"use strict";chrome.runtime.onMessage.addListener(((e,o,n)=>{"showPopup"===e.action&&chrome.action.openPopup()}))})();
