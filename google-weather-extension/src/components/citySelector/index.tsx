@@ -2,24 +2,39 @@ import React, { useState, useEffect, useRef } from 'react';
 import { setSelectedCity, getSelectedCity } from '../../weatherService';
 import './index.css';
 
-const cities = ['New York', 'Los Angeles', 'Chicago'];
+const cities = ['Минск', 'Москва', 'Батуми'];
 
 export const CitySelector: React.FC = () => {
-  const [city, setCity] = useState(cities[0]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [city, setCity] = useState<string>(cities[0]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Загружаем сохраненный город
   useEffect(() => {
     const loadCity = async () => {
-      const savedCity = await getSelectedCity();
-      setCity(savedCity);
+      try {
+        const savedCity = await getSelectedCity();
+        setCity(savedCity);
+      } catch (error) {
+        console.error('Error loading city:', error);
+      }
     };
 
     loadCity();
   }, []);
 
+  // Сохраняем выбранный город при изменении состояния
   useEffect(() => {
-    setSelectedCity(city);
+    const saveCity = async () => {
+      try {
+        console.log('Saving city:', city);
+        await setSelectedCity(city);
+      } catch (error) {
+        console.error('Error saving city:', error);
+      }
+    };
+
+    saveCity();
   }, [city]);
 
   const handleCityChange = (newCity: string) => {
@@ -75,3 +90,5 @@ export const CitySelector: React.FC = () => {
     </div>
   );
 };
+
+
